@@ -1,11 +1,11 @@
-class Customer:
+class Coffee:
     _all = []
 
     def __init__(self, name):
-        if not isinstance(name, str) or not (1 <= len(name) <= 15):
-            raise ValueError("Name must be a string between 1 and 15 characters.")
+        if not isinstance(name, str) or len(name) < 3:
+            raise ValueError("Name must be at least 3 characters long.")
         self._name = name
-        Customer._all.append(self)
+        Coffee._all.append(self)
 
     @property
     def name(self):
@@ -13,22 +13,20 @@ class Customer:
 
     @name.setter
     def name(self, value):
-        if not isinstance(value, str) or not (1 <= len(value) <= 15):
-            raise ValueError("Name must be a string between 1 and 15 characters.")
+        if not isinstance(value, str) or len(value) < 3:
+            raise ValueError("Name must be at least 3 characters long.")
         self._name = value
 
     def orders(self):
-        return [order for order in Order._all if order.customer == self]
+        return [order for order in Order._all if order.coffee == self]
 
-    def coffees(self):
-        return list(set(order.coffee for order in self.orders()))
+    def customers(self):
+        return list(set(order.customer for order in self.orders()))
 
-    def create_order(self, coffee, price):
-        return Order(self, coffee, price)
+    def num_orders(self):
+        return len(self.orders())
 
-    @classmethod
-    def most_aficionado(cls, coffee):
-        customer_spending = {}
-        for order in coffee.orders():
-            customer_spending[order.customer] = customer_spending.get(order.customer, 0) + order.price
-        return max(customer_spending, key=customer_spending.get) if customer_spending else None
+    def average_price(self):
+        if len(self.orders()) == 0:
+            return 0
+        return sum(order.price for order in self.orders()) / len(self.orders())
