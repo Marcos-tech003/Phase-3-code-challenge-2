@@ -18,6 +18,7 @@ class Coffee:
         self._name = value
 
     def orders(self):
+        from lib.order import Order
         return [order for order in Order._all if order.coffee == self]
 
     def customers(self):
